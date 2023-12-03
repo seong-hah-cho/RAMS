@@ -153,9 +153,13 @@ class RAMSLightning(pl.LightningModule):
         self.log('val_metric', metric, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         return loss
     
-    def predict(self, X, index):
+    def predict(self, X, index = None):
         # Convert to PyTorch tensor and add batch dimension if needed
-        X_batch = X[index:index+1].astype(np.float32)  # Assuming index is to select a single example
+        if index:
+            X_batch = X[index:index+1].astype(np.float32)  # Assuming index is to select a single example
+        else:
+            X_batch = X.astype(np.float32)
+
         if len(X_batch.shape) == 3:
             X_batch = X_batch[np.newaxis, ...]  # Add batch dimension
         input_tensor = torch.from_numpy(X_batch).float()
